@@ -107,7 +107,7 @@ const CustomerDetails = () => {
         Add Debit Transaction
       </button>
       <div className="transactions-list mt-4">
-        {transactions.map(([transactionId, transactionData], index) => (
+        {transactions.slice().reverse().map(([transactionId, transactionData], index) => (
           <div
             key={index}
             className={`${styles.transactionData} ${transactionData.transaction_type === 'Credit' ? styles.credit : styles.debit}`}
