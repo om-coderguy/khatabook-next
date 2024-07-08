@@ -86,17 +86,18 @@ const CustomerDetails = () => {
   return (
     <div className={styles.container}>
       <div className={styles.details}>
-        <h2 style={{ textTransform: 'uppercase' ,fontSize:'25px'}}>{customer.id}.  { customer.name}</h2>
+        <h2 style={{ textTransform: 'uppercase' ,fontSize:'22px'}}>{customer.id}.  { customer.name}</h2>
         <p><strong>Alternate Name:</strong> {customer.alternateName}</p>
         <p><strong>Village:</strong> {customer.village}</p>
         <p><strong>Mobile Number:</strong> {customer.mobileNumber}</p>
         <p><strong>Alternate Mobile Number:</strong> {customer.alternateMobileNumber}</p>
-        <p><strong>Balance:</strong> <span style={{fontSize:'25px'}}>{calculateBalance()}</span></p>
+        <p><strong>Balance:</strong> <span style={{fontSize:'25px'}}>{calculateBalance()} /-</span></p>
       </div>
       <h2 className={styles.transactionsHeading}>Transactions</h2>
       <button
         onClick={() => handleAddTransaction('Credit')}
         className="bg-green-500 text-white p-2 rounded mr-2"
+      
       >
         Add Credit Transaction
       </button>

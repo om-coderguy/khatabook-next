@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import "../styles/global.css"
+import "../styles/globals.css"
 import Auth from './login';
 Auth
 

@@ -88,7 +88,7 @@ const Customers = () => {
       <div className={styles.customerList}>
         {filteredCustomers.map(([customerId, customerData]) => (
           <div key={customerId} className={styles.customerCard} onClick={() => handleCustomerClick(customerId)}>
-            <p><strong>Name:</strong> {customerData.name}</p>
+            <p style={{fontSize:'20px',textTransform:'upperCase'}}> {customerData.name}</p>
             <p><strong>Alternate Name:</strong> {customerData.alternateName}</p>
             <p><strong>Village:</strong> {customerData.village}</p>
             <p><strong>Mobile Number:</strong> {customerData.mobileNumber}</p>
