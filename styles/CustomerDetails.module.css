@@ -1,0 +1,50 @@
+.container {
+  padding: 20px;
+  min-height: 100vh;
+}
+
+.heading {
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.balance {
+  margin-bottom: 20px;
+  font-size: 18px;
+}
+
+.transactionsHeading{
+  text-align: center;
+  color: blue;
+  font-weight: bold;
+  font-size: 30px;
+}
+
+.transactionList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.debit {
+  margin-bottom: 15px;
+  padding: 10px;
+  background-color: ivory;
+  border: 1px solid #ff0000;
+  border-radius: 4px;
+  width: 30%;
+  float: right;
+  display: block;
+  clear: both;
+}
+
+.credit {
+  margin-bottom: 15px;
+  padding: 10px;
+  background-color:ivory;
+  border: 1px solid #00ff00;
+  width: 30%;
+  float: left;
+  display: block;
+  clear: both;
+}
