@@ -71,7 +71,7 @@ const Auth = () => {
           />
         </div>
         <button type="submit" className={styles.button}>{isLogin ? 'Login' : 'Sign Up'}</button>
-        <p>
+        {/* <p>
           {isLogin ? "Don't have an account?" : 'Already have an account?'}{' '}
           <button
             type="button"
@@ -80,7 +80,7 @@ const Auth = () => {
           >
             {isLogin ? 'Sign Up' : 'Login'}
           </button>
-        </p>
+        </p> */}
       </form>
     </div>
   );
