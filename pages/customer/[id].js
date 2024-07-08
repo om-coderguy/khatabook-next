@@ -86,7 +86,7 @@ const CustomerDetails = () => {
   return (
     <div className={styles.container}>
       <div className={styles.details}>
-        <h2 style={{ textTransform: 'uppercase' ,fontSize:'25px'}}> {customer.name}</h2>
+        <h2 style={{ textTransform: 'uppercase' ,fontSize:'25px'}}>{customer.id}.  { customer.name}</h2>
         <p><strong>Alternate Name:</strong> {customer.alternateName}</p>
         <p><strong>Village:</strong> {customer.village}</p>
         <p><strong>Mobile Number:</strong> {customer.mobileNumber}</p>
