@@ -153,7 +153,11 @@ const CustomerDetails = () => {
                   <span
                     style={
                       customer.accountBalance > 0
-                        ? { fontSize: "25px", color: "#e63946", fontWeight: "bold" }
+                        ? {
+                            fontSize: "25px",
+                            color: "#e63946",
+                            fontWeight: "bold",
+                          }
                         : {
                             fontSize: "25px",
                             color: "green",
@@ -211,26 +215,28 @@ const CustomerDetails = () => {
                       <td className="instruction">Date:</td>
                       <td>{transactionData.date}</td>
                     </tr>
-                    <tr>
-                      <td className="instruction">Bill Number:</td>
-                      <td>{transactionData.bill_number}</td>
-                    </tr>
-                    <tr>
-                      <td className="instruction">Book Number:</td>
-                      <td>{transactionData.book_number}</td>
-                    </tr>
+                    {transactionData.transaction_type === "Debit" && (
+                      <>
+                        <tr>
+                          <td className="instruction">Bill Number:</td>
+                          <td>{transactionData.bill_number}</td>
+                        </tr>
+                        <tr>
+                          <td className="instruction">Book Number:</td>
+                          <td>{transactionData.book_number}</td>
+                        </tr>
+                      </>
+                    )}
                     <tr>
                       <td className="instruction">Note:</td>
                       <td>{transactionData.note}</td>
                     </tr>
-                    <tr>
-                      <td className="instruction">Transaction Type:</td>
-                      <td>{transactionData.transaction_type}</td>
-                    </tr>
-                    <tr>
-                      <td className="instruction">Payment Mode:</td>
-                      <td>{transactionData.payment_mode}</td>
-                    </tr>
+                    {transactionData.transaction_type === "Credit" && (
+                      <tr>
+                        <td className="instruction">Payment Mode:</td>
+                        <td>{transactionData.payment_mode}</td>
+                      </tr>
+                    )}
                   </tbody>
                 </table>
               </div>
