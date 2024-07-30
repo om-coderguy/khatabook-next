@@ -48,10 +48,10 @@ const Auth = () => {
   return (
     <div className={styles.authContainer}>
       <form className={styles.authForm} onSubmit={handleAuth}>
-        <h2>{isLogin ? 'Login' : 'Sign Up'}</h2>
+        <h2 style={{textAlign:'center', fontSize:'30px', fontFamily:'sans-serif'}}>{isLogin ? 'Login' : 'Sign Up'}</h2>
         {error && <p className={styles.error}>{error}</p>}
         <div className={styles.formGroup}>
-          <label htmlFor="email">Email</label>
+          <label htmlFor="email" >Email</label>
           <input
             type="email"
             id="email"

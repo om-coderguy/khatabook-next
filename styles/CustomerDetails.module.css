@@ -13,9 +13,9 @@
   font-size: 18px;
 }
 
-.transactionsHeading{
+.transactionsHeading {
   text-align: center;
-  color: blue;
+  color: #f4a261;
   font-weight: bold;
   font-size: 30px;
 }
@@ -29,10 +29,10 @@
 .debit {
   margin-bottom: 15px;
   padding: 10px;
-  background-color: ivory;
+  background-color: rgba(238, 14, 14, 0.29);
   border: 1px solid #ff0000;
   border-radius: 4px;
-  width: 30%;
+  width: 20%;
   float: right;
   display: block;
   clear: both;
@@ -41,10 +41,123 @@
 .credit {
   margin-bottom: 15px;
   padding: 10px;
-  background-color:ivory;
+  background-color: rgba(77, 232, 77, 0.462);
   border: 1px solid #00ff00;
-  width: 30%;
+  width: 20%;
   float: left;
   display: block;
   clear: both;
+}
+
+.transactionButtons button:hover {
+  background-color: #ddd;
+  color: rgba(0, 0, 0, 0.73);
+}
+
+.transactionButtons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.creditButton {
+  color: #f2e8cf;
+  margin: 0px 10px 25px 0px;
+  padding: 10px;
+  background-color: #6a994e;
+  border: 1px solid #6a994e;
+  border-radius: 4px;
+  clear: both;
+  font-size: 15px;
+  font-weight: bold;
+}
+
+.debitButton {
+  color: #f2e8cf;
+  margin: 0px 0px 25px 0px;
+  padding: 10px;
+  background-color: #e63946;
+  border: 1px solid #ff0000;
+  border-radius: 4px;
+  clear: both;
+  font-size: 15px;
+  font-weight: bold;
+}
+
+.transactioncardButton {
+  display: flex;
+  align-items: center;
+}
+
+.transactioncardButton button {
+  width: 50%;
+  margin-right: 10px;
+  padding: 8px 10px;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.transactioncardButton button:hover {
+  background-color: #ddd;
+}
+
+.updateButton {
+  color: rgba(245, 245, 220, 0.834);
+  font-size: 15px;
+  background-color: #457b9d;
+  font-weight: bold;
+  display: block;
+  border-radius: 5px;
+}
+
+.updateButton:hover {
+  color: rgba(0, 0, 0, 0.8);
+}
+
+.deleteButton {
+  color: rgba(0, 0, 0, 0.79);
+  font-size: 15px;
+  background-color: #e63946;
+  font-weight: bold;
+  border-radius: 5px;
+}
+
+.customerTable {
+  width: 50%;
+  border-collapse: separate; /* Use 'separate' to allow spacing between rows */
+  border-spacing: 0 10px; /* Adjust the second value to control row spacing */
+}
+
+.customerTable td {
+  padding: 8px;
+  border: 1px solid #ddd;
+}
+
+.customerTable .instruction {
+  font-weight: bold;
+  width: 50%;
+  background-color: #f9f9f9;
+}
+
+.transactionTable {
+  width: 100%;
+  border-collapse: separate; /* Use 'separate' to allow spacing between rows */
+  border-spacing: 0 10px; /* Adjust the second value to control row spacing */
+  margin-bottom: 10px;
+}
+
+.transaction-table td {
+  padding: 8px;
+  border: 1px solid #ddd;
+}
+
+.transaction-table .instruction {
+  font-weight: bold;
+  background-color: #f9f9f9;
+}
+
+.notAvailableText {
+  color: #e63946;
 }

@@ -7,7 +7,8 @@
 }
 
 .authForm {
-  background-color: #fff;
+  width: 25%;
+  background-color: #2a9d8f;
   padding: 20px;
   border-radius: 5px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -15,6 +16,10 @@
 
 .authForm h2 {
   margin-bottom: 20px;
+}
+
+.authForm label {
+  color: #fff;
 }
 
 .authForm .formGroup {
@@ -27,24 +32,28 @@
 }
 
 .authForm .formGroup input {
-  width: 100%;
+  width: 90%;
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
 }
 
 .authForm .button {
-  width: 100%;
+  /* margin-left: 10px; */
+  width: 95%;
   padding: 10px;
-  background-color: #0070f3;
-  color: #fff;
+  background-color: #e9c46a;
+  color: black;
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  align-self: center;
+  font-weight: bolder;
+  font-size: large;
 }
 
 .authForm .button:hover {
-  background-color: #005bb5;
+  background-color: #e76f51;
 }
 
 .authForm .toggleButton {

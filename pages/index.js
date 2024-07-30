@@ -1,4 +1,4 @@
-import Link from 'next/link';
+
 import "../styles/globals.css"
 import Auth from './login';
 Auth
