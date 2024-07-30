@@ -112,35 +112,45 @@ const Customers = () => {
       >
         Add Customer
       </button>
-      <div
-        className={styles.customerList}
-      >
+      <div className={styles.customerList}>
         {filteredCustomers.map(([customerId, customerData]) => (
           <div
             key={customerId}
             className={styles.customerCard}
             onClick={() => handleCustomerClick(customerId)}
           >
-            <p style={{ fontSize: "20px", textTransform: "upperCase" }}>
-              {" "}
-              {customerData.name}
-            </p>
-            <p>
-              <strong>Alternate Name:</strong> {customerData.alternateName}
-            </p>
-            <p>
-              <strong>Village:</strong> {customerData.village}
-            </p>
-            <p>
-              <strong>Mobile Number:</strong> {customerData.mobileNumber}
-            </p>
-            <p>
-              <strong>Alternate Mobile Number:</strong>{" "}
-              {customerData.alternateMobileNumber}
-            </p>
-            <p>
-              <strong>Account Balance:</strong> {customerData.accountBalance}
-            </p>
+            <div className="customer-details">
+              <table className={styles.customerTable}>
+                <tbody>
+                  <tr>
+                    <td className={styles.instruction}>Name:</td>
+                    <td>{customerData.name}</td>
+                  </tr>
+                  <tr>
+                    <td className={styles.instruction}>Alternate Name:</td>
+                    <td>{customerData.alternateName}</td>
+                  </tr>
+                  <tr>
+                    <td className={styles.instruction}>Village:</td>
+                    <td>{customerData.village}</td>
+                  </tr>
+                  <tr>
+                    <td className={styles.instruction}>Mobile Number:</td>
+                    <td>{customerData.mobileNumber}</td>
+                  </tr>
+                  <tr>
+                    <td className={styles.instruction}>
+                      Alt Mobile No.:
+                    </td>
+                    <td>{customerData.alternateMobileNumber}</td>
+                  </tr>
+                  <tr>
+                    <td className={styles.instruction}>Account Balance:</td>
+                    <td>{customerData.accountBalance}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
             {selectedCustomer === customerId && (
               <div>
                 <button

@@ -74,7 +74,7 @@
 
 .customerCard {
   background-color: #a8dadc;
-  padding: 20px;
+  padding: 20px 20px 10px 20px;
   border: 1px solid #ccc;
   border-radius: 5px;
   width: calc(25% - 60px);
@@ -116,4 +116,19 @@
   font-size: 15px;
   background-color: #e63946;
   font-weight: bold;
+}
+
+.customerTable {
+  width: 100%;
+  border-collapse: separate; /* Use 'separate' to allow spacing between rows */
+  border-spacing: 0 10px; /* Adjust the second value to control row spacing */
+}
+
+.customerTable td {
+ font-size: 15px;
+}
+
+.customerTable .instruction {
+  font-weight: bold;
+  width: 50%;
 }
