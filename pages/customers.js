@@ -120,12 +120,12 @@ const Customers = () => {
             onClick={() => handleCustomerClick(customerId)}
           >
             <div className="customer-details">
+              <div style={{ fontSize: "20px", textTransform: "upperCase" }}>
+                {" "}
+                {customerData.name}
+              </div>
               <table className={styles.customerTable}>
                 <tbody>
-                  <tr>
-                    <td className={styles.instruction}>Name:</td>
-                    <td>{customerData.name}</td>
-                  </tr>
                   <tr>
                     <td className={styles.instruction}>Alternate Name:</td>
                     <td>{customerData.alternateName}</td>
@@ -139,9 +139,7 @@ const Customers = () => {
                     <td>{customerData.mobileNumber}</td>
                   </tr>
                   <tr>
-                    <td className={styles.instruction}>
-                      Alt Mobile No.:
-                    </td>
+                    <td className={styles.instruction}>Alt Mobile N:</td>
                     <td>{customerData.alternateMobileNumber}</td>
                   </tr>
                   <tr>
