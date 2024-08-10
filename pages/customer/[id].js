@@ -77,12 +77,12 @@ const CustomerDetails = () => {
   };
 
   const handleAddTransaction = (type) => {
-    router.push(`/add-transaction?type=${type}&userId=${userId}`);
+    router.push(`/update-transaction?type=${type}&userId=${userId}`);
   };
 
   const handleEditTransaction = (transactionId, type) => {
     router.push(
-      `/add-transaction?id=${transactionId}&userId=${userId}&type=${type}`
+      `/update-transaction?id=${transactionId}&userId=${userId}&type=${type}`
     );
   };
 

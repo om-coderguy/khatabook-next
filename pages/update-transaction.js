@@ -1,19 +1,19 @@
-import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/router';
-import { db } from '../firebase';
-import { ref,set,get} from 'firebase/database';
-
+import React, { useState, useEffect } from "react";
+import { useRouter } from "next/router";
+import { db } from "../firebase";
+import { ref, set, get } from "firebase/database";
+import "../styles/Customers.module.css"; // Import the CSS file
 
 const AddTransaction = () => {
-  const [amount, setAmount] = useState('');
-  const [date, setDate] = useState('');
-  const [billNumber, setBillNumber] = useState('');
-  const [bookNumber, setBookNumber] = useState('');
-  const [note, setNote] = useState('');
-  const [transactionType, setTransactionType] = useState('');
-  const [paymentMode, setPaymentMode] = useState('');
-  const [userId, setUserId] = useState('');
-  const [transactionId, setTransactionId] = useState('');
+  const [amount, setAmount] = useState("");
+  const [date, setDate] = useState("");
+  const [billNumber, setBillNumber] = useState("");
+  const [bookNumber, setBookNumber] = useState("");
+  const [note, setNote] = useState("");
+  const [transactionType, setTransactionType] = useState("");
+  const [paymentMode, setPaymentMode] = useState("");
+  const [userId, setUserId] = useState("");
+  const [transactionId, setTransactionId] = useState("");
   const router = useRouter();
 
   useEffect(() => {
@@ -24,7 +24,6 @@ const AddTransaction = () => {
     if (id) {
       // Fetch existing transaction data to pre-fill form for editing
       const fetchTransaction = async () => {
-       
         const transactionRef = ref(db, `transactions/${id}`);
         const transactionSnapshot = await get(transactionRef);
         if (transactionSnapshot.exists()) {
@@ -42,15 +41,17 @@ const AddTransaction = () => {
     } else {
       // Fetch the highest transaction ID to generate the next ID
       const fetchTransactions = async () => {
-        const transactionsRef = ref(db, 'transactions');
+        const transactionsRef = ref(db, "transactions");
         const transactionsSnapshot = await get(transactionsRef);
         if (transactionsSnapshot.exists()) {
           const transactions = transactionsSnapshot.val();
-          const ids = Object.keys(transactions).map(id => parseInt(id.slice(1)));
+          const ids = Object.keys(transactions).map((id) =>
+            parseInt(id.slice(1))
+          );
           const maxId = Math.max(...ids);
           setTransactionId(`T${maxId + 1}`);
         } else {
-          setTransactionId('T1');
+          setTransactionId("T1");
         }
       };
       fetchTransactions();
@@ -75,72 +76,74 @@ const AddTransaction = () => {
   };
 
   return (
-    <div className="p-4">
-      <h1 className="text-2xl mb-4">{transactionId ? 'Edit Transaction' : 'Add Transaction'}</h1>
+    <div className="form-container">
+      <h1 className="form-header">
+        {transactionId ? "Edit Transaction" : "Add Transaction"}
+      </h1>
       <form onSubmit={handleSubmit}>
-        <div className="mb-4">
-          <label className="block mb-2">Amount</label>
+        <div className="form-group">
+          <label className="form-label">Amount</label>
           <input
             type="number"
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
-            className="p-2 border rounded w-full"
+            className="form-input"
             required
           />
         </div>
-        <div className="mb-4">
-          <label className="block mb-2">Date</label>
+        <div className="form-group">
+          <label className="form-label">Date</label>
           <input
             type="date"
             value={date}
             onChange={(e) => setDate(e.target.value)}
-            className="p-2 border rounded w-full"
+            className="form-input"
             required
           />
         </div>
-        {transactionType === 'Debit' && (
+        {transactionType === "Debit" && (
           <>
-            <div className="mb-4">
-              <label className="block mb-2">Bill Number</label>
+            <div className="form-group">
+              <label className="form-label">Bill Number</label>
               <input
                 type="text"
                 value={billNumber}
                 onChange={(e) => setBillNumber(e.target.value)}
-                className="p-2 border rounded w-full"
+                className="form-input"
               />
             </div>
-            <div className="mb-4">
-              <label className="block mb-2">Book Number</label>
+            <div className="form-group">
+              <label className="form-label">Book Number</label>
               <input
                 type="text"
                 value={bookNumber}
                 onChange={(e) => setBookNumber(e.target.value)}
-                className="p-2 border rounded w-full"
+                className="form-input"
               />
             </div>
           </>
         )}
-        <div className="mb-4">
-          <label className="block mb-2">Note</label>
+        <div className="form-group">
+          <label className="form-label">Note</label>
           <input
             type="text"
             value={note}
             onChange={(e) => setNote(e.target.value)}
-            className="p-2 border rounded w-full"
+            className="form-input"
           />
         </div>
-        <div className="mb-4">
-          <label className="block mb-2">Payment Mode</label>
+        <div className="form-group">
+          <label className="form-label">Payment Mode</label>
           <input
             type="text"
             value={paymentMode}
             onChange={(e) => setPaymentMode(e.target.value)}
-            className="p-2 border rounded w-full"
+            className="form-input"
             required
           />
         </div>
-        <button type="submit" className="bg-blue-500 text-white p-2 rounded">
-          Save
+        <button type="submit" className="submit-button">
+          Sav
         </button>
       </form>
     </div>
