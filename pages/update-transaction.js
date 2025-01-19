@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { db } from "../firebase";
 import { ref, set, get } from "firebase/database";
-import "../styles/Customers.module.css"; // Import the CSS file
+import styles from "../styles/UpdateTransaction.module.css"; // Import the new CSS file
 
 const AddTransaction = () => {
   const [amount, setAmount] = useState("");
@@ -22,7 +22,6 @@ const AddTransaction = () => {
     setTransactionType(type);
 
     if (id) {
-      // Fetch existing transaction data to pre-fill form for editing
       const fetchTransaction = async () => {
         const transactionRef = ref(db, `transactions/${id}`);
         const transactionSnapshot = await get(transactionRef);
@@ -39,7 +38,6 @@ const AddTransaction = () => {
       };
       fetchTransaction();
     } else {
-      // Fetch the highest transaction ID to generate the next ID
       const fetchTransactions = async () => {
         const transactionsRef = ref(db, "transactions");
         const transactionsSnapshot = await get(transactionsRef);
@@ -76,74 +74,74 @@ const AddTransaction = () => {
   };
 
   return (
-    <div className="form-container">
-      <h1 className="form-header">
+    <div className={styles.container}>
+      <h1 className={styles.header}>
         {transactionId ? "Edit Transaction" : "Add Transaction"}
       </h1>
-      <form onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label className="form-label">Amount</label>
+      <form onSubmit={handleSubmit} className={styles.form}>
+        <div className={styles.formGroup}>
+          <label className={styles.label}>Amount</label>
           <input
             type="number"
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
-            className="form-input"
+            className={styles.input}
             required
           />
         </div>
-        <div className="form-group">
-          <label className="form-label">Date</label>
+        <div className={styles.formGroup}>
+          <label className={styles.label}>Date</label>
           <input
             type="date"
             value={date}
             onChange={(e) => setDate(e.target.value)}
-            className="form-input"
+            className={styles.input}
             required
           />
         </div>
         {transactionType === "Debit" && (
           <>
-            <div className="form-group">
-              <label className="form-label">Bill Number</label>
+            <div className={styles.formGroup}>
+              <label className={styles.label}>Bill Number</label>
               <input
                 type="text"
                 value={billNumber}
                 onChange={(e) => setBillNumber(e.target.value)}
-                className="form-input"
+                className={styles.input}
               />
             </div>
-            <div className="form-group">
-              <label className="form-label">Book Number</label>
+            <div className={styles.formGroup}>
+              <label className={styles.label}>Book Number</label>
               <input
                 type="text"
                 value={bookNumber}
                 onChange={(e) => setBookNumber(e.target.value)}
-                className="form-input"
+                className={styles.input}
               />
             </div>
           </>
         )}
-        <div className="form-group">
-          <label className="form-label">Note</label>
+        <div className={styles.formGroup}>
+          <label className={styles.label}>Note</label>
           <input
             type="text"
             value={note}
             onChange={(e) => setNote(e.target.value)}
-            className="form-input"
+            className={styles.input}
           />
         </div>
-        <div className="form-group">
-          <label className="form-label">Payment Mode</label>
+        <div className={styles.formGroup}>
+          <label className={styles.label}>Payment Mode</label>
           <input
             type="text"
             value={paymentMode}
             onChange={(e) => setPaymentMode(e.target.value)}
-            className="form-input"
+            className={styles.input}
             required
           />
         </div>
-        <button type="submit" className="submit-button">
-          Sav
+        <button type="submit" className={styles.submitButton}>
+          Save
         </button>
       </form>
     </div>

@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
-import { ref, get, update, remove } from "firebase/database";
+import { ref, get, remove } from "firebase/database";
 import { db } from "../firebase";
 import { useRouter } from "next/router";
 import styles from "../styles/Customers.module.css";
 import dummyData from "../public/dummyData.json"; // Import the dummy data
+import { DataGrid } from "@mui/x-data-grid";
+import { FaEye, FaEdit, FaTrash } from "react-icons/fa";
 
 const Customers = () => {
   const [customers, setCustomers] = useState([]);
@@ -11,7 +13,9 @@ const Customers = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [totalCustomers, setTotalCustomers] = useState(0);
   const [filteredCustomerCount, setFilteredCustomerCount] = useState(0);
-  const [selectedCustomer, setselectedCustomer] = useState(null);
+  const [selectedCustomerId, setSelectedCustomerId] = useState(null);
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+  const [customerToDelete, setCustomerToDelete] = useState(null);
   const router = useRouter();
 
   const fetchCustomers = async () => {
@@ -38,10 +42,15 @@ const Customers = () => {
     fetchCustomers();
   };
 
-  const handleUpdate = async (customerId, updatedData) => {
-    const customerRef = ref(db, "customers/" + customerId);
-    await update(customerRef, updatedData);
-    fetchCustomers();
+  const handleUpdate = (customerId, customerData) => {
+    router.push({
+      pathname: "/add-customer",
+      query: {
+        customerId,
+        customerData: JSON.stringify(customerData),
+        editMode: true,
+      },
+    });
   };
 
   const handleSearch = (e) => {
@@ -65,26 +74,127 @@ const Customers = () => {
       );
       await set(newCustomerRef, customer);
     }
-
     fetchCustomers();
   };
 
-  const handleCustomerClick = (customerId) => {
-    router.push(`/customer/${customerId}`);
+  const openConfirmDialog = (customerId) => {
+    setCustomerToDelete(customerId);
+    setShowConfirmDialog(true);
   };
+
+  const closeConfirmDialog = () => {
+    setShowConfirmDialog(false);
+    setCustomerToDelete(null);
+  };
+
+  const handleDeleteConfirmed = () => {
+    handleDelete(customerToDelete);
+    closeConfirmDialog();
+  };
+
+  // Sample data (replace with your dynamic data)
+  const rows = filteredCustomers.map(([id, data]) => ({
+    id,
+    name: data.name,
+    alternateName: data.alternateName,
+    village: data.village,
+    mobileNumber: data.mobileNumber,
+    alternateMobileNumber: data.alternateMobileNumber,
+    accountBalance: data.accountBalance,
+  }));
+
+  const columns = [
+    {
+      field: "name",
+      headerName: "Name",
+      flex: 1,
+      renderCell: (params) => (
+        <span style={{ textTransform: "capitalize" }}>{params.value}</span>
+      ),
+    },
+    {
+      field: "alternateName",
+      headerName: "Alternate Name",
+      flex: 1,
+      renderCell: (params) => (
+        <span style={{ textTransform: "capitalize" }}>{params.value}</span>
+      ),
+    },
+    {
+      field: "village",
+      headerName: "Village",
+      flex: 1,
+      renderCell: (params) => (
+        <span style={{ textTransform: "capitalize" }}>{params.value}</span>
+      ),
+    },
+    { field: "mobileNumber", headerName: "Mobile Number", flex: 1 },
+    { field: "alternateMobileNumber", headerName: "Alt Mobile N", flex: 1 },
+    {
+      field: "accountBalance",
+      headerName: "Account Balance",
+      flex: 1,
+      renderCell: (params) => (
+        <span style={{ textTransform: "capitalize" }}>{params.value}</span>
+      ),
+    },
+    {
+      field: "actions",
+      headerName: "Actions",
+      flex: 1,
+      renderCell: (params) => (
+        <div className={styles.actions}>
+          <button
+            className={styles.detailsButton}
+            onClick={() => router.push(`/customer/${params.row.id}`)}
+          >
+            <FaEye style={{ fontSize: "20px", color: "#555" }} />
+          </button>
+          <button
+            className={styles.updateButton}
+            onClick={() => handleUpdate(params.row.id, params.row)}
+          >
+            <FaEdit style={{ fontSize: "20px", color: "#555" }} />
+          </button>
+          <button
+            className={styles.deleteButton}
+            onClick={() => openConfirmDialog(params.row.id)}
+          >
+            <FaTrash style={{ fontSize: "20px", color: "#555" }} />
+          </button>
+        </div>
+      ),
+    },
+  ];
+
+  // const filteredCustomers = customers.filter(([id, data]) =>
+  //   data.name.toLowerCase().includes(searchQuery.toLowerCase())
+  // );
+
+  // const totalCustomers = customers.length;
+  // const filteredCustomerCount = filteredCustomers.length;
 
   return (
     <div className={styles.container}>
       <h1 className={styles.heading}>SHREE RENUKA TRADERS</h1>
-      <h2
-        style={{
-          fontSize: "20px",
-          marginBottom: "20px",
-          color: "rgba(7, 6, 6, 0.789)",
-        }}
-      >
-        Customers
-      </h2>
+      <div className={styles.header}>
+        <h2
+          style={{
+            fontSize: "20px",
+            marginBottom: "20px",
+            color: "rgba(7, 6, 6, 0.789)",
+          }}
+        >
+          Customers
+        </h2>
+        <button
+          onClick={() => router.push("/add-customer")}
+          className={styles.addButton}
+          style={{ backgroundColor: "#5F67FA" }}
+        >
+          Add Customer
+        </button>
+      </div>
       <input
         type="text"
         value={searchQuery}
@@ -103,76 +213,43 @@ const Customers = () => {
           Filtered Customers:{" "}
           <span style={{ color: "#c1121f", fontWeight: "bold" }}>
             {filteredCustomerCount}
-          </span>{" "}
+          </span>
         </span>
       </div>
-      <button
-        onClick={() => router.push("/add-customer")}
-        className={styles.addButton}
-      >
-        Add Customer
-      </button>
-      <div className={styles.customerList}>
-        {filteredCustomers.map(([customerId, customerData]) => (
-          <div
-            key={customerId}
-            className={styles.customerCard}
-            onClick={() => handleCustomerClick(customerId)}
-          >
-            <div className="customer-details">
-              <div style={{ fontSize: "20px", textTransform: "upperCase" }}>
-                {" "}
-                {customerData.name}
-              </div>
-              <table className={styles.customerTable}>
-                <tbody>
-                  <tr>
-                    <td className={styles.instruction}>Alternate Name:</td>
-                    <td>{customerData.alternateName}</td>
-                  </tr>
-                  <tr>
-                    <td className={styles.instruction}>Village:</td>
-                    <td>{customerData.village}</td>
-                  </tr>
-                  <tr>
-                    <td className={styles.instruction}>Mobile Number:</td>
-                    <td>{customerData.mobileNumber}</td>
-                  </tr>
-                  <tr>
-                    <td className={styles.instruction}>Alt Mobile N:</td>
-                    <td>{customerData.alternateMobileNumber}</td>
-                  </tr>
-                  <tr>
-                    <td className={styles.instruction}>Account Balance:</td>
-                    <td>{customerData.accountBalance}</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            {selectedCustomer === customerId && (
-              <div>
-                <button
-                  className={styles.updateButton}
-                  onClick={() =>
-                    handleUpdate(customerId, {
-                      ...customerData,
-                      name: customerData.name + " Updated",
-                    })
-                  }
-                >
-                  Update
-                </button>
-                <button
-                  className={styles.deleteButton}
-                  onClick={() => handleDelete(customerId)}
-                >
-                  Delete
-                </button>
-              </div>
-            )}
-          </div>
-        ))}
+      <div style={{ height: "calc(100vh - 250px)", width: "100%" }}>
+        <DataGrid
+          rows={rows}
+          columns={columns}
+          initialState={{
+            pagination: { paginationModel: { pageSize: 30, page: 0 } },
+          }}
+          pageSizeOptions={[30, 50, 100]}
+          checkboxSelection
+          sx={{ border: 0 }}
+        />
       </div>
+      {showConfirmDialog && (
+        <div className={styles.dialogOverlay}>
+          <div className={styles.dialogBox}>
+            <h2>Confirm Delete</h2>
+            <p>Are you sure you want to delete this customer?</p>
+            <div className={styles.dialogButtons}>
+              <button
+                className={`${styles.dialogButton} ${styles.cancel}`}
+                onClick={closeConfirmDialog}
+              >
+                Cancel
+              </button>
+              <button
+                className={`${styles.dialogButton} ${styles.confirm}`}
+                onClick={handleDeleteConfirmed}
+              >
+                Confirm
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
