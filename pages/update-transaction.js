@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { db } from "../firebase";
 import { ref, set, get } from "firebase/database";
+import { TextField, Autocomplete, Button } from "@mui/material"; // Import MUI components
 import styles from "../styles/UpdateTransaction.module.css"; // Import the new CSS file
 
 const AddTransaction = () => {
@@ -10,16 +11,18 @@ const AddTransaction = () => {
   const [billNumber, setBillNumber] = useState("");
   const [bookNumber, setBookNumber] = useState("");
   const [note, setNote] = useState("");
-  const [transactionType, setTransactionType] = useState("");
-  const [paymentMode, setPaymentMode] = useState("");
+  const [transactionTypes, setTransactionTypes] = useState(""); // Updated for multiselect
+  const [paymentModes, setPaymentModes] = useState([]); // Updated for multiselect
   const [userId, setUserId] = useState("");
   const [transactionId, setTransactionId] = useState("");
   const router = useRouter();
 
+  const transactionTypeOptions = ["Debit", "Credit"]; // Options for transaction type
+  const paymentModeOptions = ["Cash", "Card", "UPI", "Net Banking"]; // Options for payment modes
+
   useEffect(() => {
-    const { userId, type, id } = router.query;
+    const { userId, id } = router.query;
     setUserId(userId);
-    setTransactionType(type);
 
     if (id) {
       const fetchTransaction = async () => {
@@ -32,7 +35,8 @@ const AddTransaction = () => {
           setBillNumber(data.bill_number);
           setBookNumber(data.book_number);
           setNote(data.note);
-          setPaymentMode(data.payment_mode);
+          setTransactionTypes(data.transaction_type?.split(",") || []);
+          setPaymentModes(data.payment_mode?.split(",") || []);
           setTransactionId(id);
         }
       };
@@ -66,8 +70,8 @@ const AddTransaction = () => {
       bill_number: billNumber,
       book_number: bookNumber,
       note,
-      transaction_type: transactionType,
-      payment_mode: paymentMode,
+      transaction_type: transactionTypes, // Save as comma-separated string
+      payment_mode: paymentModes, // Save as comma-separated string
     };
     await set(ref(db, `transactions/${transactionId}`), newTransaction);
     router.push(`/customer/${userId}`);
@@ -80,69 +84,94 @@ const AddTransaction = () => {
       </h1>
       <form onSubmit={handleSubmit} className={styles.form}>
         <div className={styles.formGroup}>
-          <label className={styles.label}>Amount</label>
-          <input
+          <TextField
+            label="Amount"
             type="number"
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
-            className={styles.input}
+            fullWidth
             required
+            className={styles.input}
           />
         </div>
         <div className={styles.formGroup}>
-          <label className={styles.label}>Date</label>
-          <input
+          <TextField
+            label="Date"
             type="date"
             value={date}
             onChange={(e) => setDate(e.target.value)}
-            className={styles.input}
+            fullWidth
             required
+            InputLabelProps={{ shrink: true }}
+            className={styles.input}
           />
         </div>
-        {transactionType === "Debit" && (
+        <div className={styles.formGroup}>
+          <Autocomplete
+            options={transactionTypeOptions}
+            value={transactionTypes}
+            onChange={(event, newValue) => setTransactionTypes(newValue)}
+            renderInput={(params) => (
+              <TextField {...params} label="Transaction Type" fullWidth />
+            )}
+            className={styles.input}
+          />
+        </div>
+        {transactionTypes=="Debit"&& (
           <>
             <div className={styles.formGroup}>
-              <label className={styles.label}>Bill Number</label>
-              <input
+              <TextField
+                label="Bill Number"
                 type="text"
                 value={billNumber}
                 onChange={(e) => setBillNumber(e.target.value)}
+                fullWidth
                 className={styles.input}
               />
             </div>
             <div className={styles.formGroup}>
-              <label className={styles.label}>Book Number</label>
-              <input
+              <TextField
+                label="Book Number"
                 type="text"
                 value={bookNumber}
                 onChange={(e) => setBookNumber(e.target.value)}
+                fullWidth
                 className={styles.input}
               />
             </div>
           </>
         )}
+        {transactionTypes=="Credit"&& (
+          <div className={styles.formGroup}>
+            <Autocomplete
+              options={paymentModeOptions}
+              value={paymentModes}
+              onChange={(event, newValue) => setPaymentModes(newValue)}
+              renderInput={(params) => (
+                <TextField {...params} label="Payment Mode" fullWidth />
+              )}
+              className={styles.input}
+            />
+          </div>
+        )}
         <div className={styles.formGroup}>
-          <label className={styles.label}>Note</label>
-          <input
+          <TextField
+            label="Note"
             type="text"
             value={note}
             onChange={(e) => setNote(e.target.value)}
+            fullWidth
             className={styles.input}
           />
         </div>
-        <div className={styles.formGroup}>
-          <label className={styles.label}>Payment Mode</label>
-          <input
-            type="text"
-            value={paymentMode}
-            onChange={(e) => setPaymentMode(e.target.value)}
-            className={styles.input}
-            required
-          />
-        </div>
-        <button type="submit" className={styles.submitButton}>
+        <Button
+          type="submit"
+          variant="contained"
+          color="primary"
+          className={styles.submitButton}
+        >
           Save
-        </button>
+        </Button>
       </form>
     </div>
   );
