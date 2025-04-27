@@ -13,10 +13,11 @@ const Customers = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [totalCustomers, setTotalCustomers] = useState(0);
   const [filteredCustomerCount, setFilteredCustomerCount] = useState(0);
-  const [selectedCustomerId, setSelectedCustomerId] = useState(null);
+  // const [selectedCustomerId, setSelectedCustomerId] = useState(null);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [customerToDelete, setCustomerToDelete] = useState(null);
   const router = useRouter();
+  const [selectedRows, setSelectedRows] = useState([]);
 
   const fetchCustomers = async () => {
     const customersRef = ref(db, "customers/");
@@ -87,9 +88,33 @@ const Customers = () => {
     setCustomerToDelete(null);
   };
 
+  const handleSelectionModelChange = (newSelection) => {
+    setSelectedRows(newSelection);
+  };
+
   const handleDeleteConfirmed = () => {
     handleDelete(customerToDelete);
     closeConfirmDialog();
+  };
+
+  const handleBulkDelete = async () => {
+    if (selectedRows.length === 0) {
+      return;
+    }
+
+    // Show confirmation dialog before deleting
+    const confirmDelete = window.confirm(
+      `Are you sure you want to delete ${selectedRows.length} customer(s)?`
+    );
+
+    if (confirmDelete) {
+      for (const customerId of selectedRows) {
+        const customerRef = ref(db, "customers/" + customerId);
+        await remove(customerRef); // Delete the customer from Firebase
+      }
+      fetchCustomers(); // Reload the customers after deletion
+      setSelectedRows([]); // Clear selected rows
+    }
   };
 
   // Sample data (replace with your dynamic data)
@@ -117,7 +142,14 @@ const Customers = () => {
       headerName: "Alternate Name",
       flex: 1,
       renderCell: (params) => (
-        <span style={{ textTransform: "capitalize" }}>{params.value}</span>
+        <span
+          style={{
+            textTransform: "capitalize",
+            color: params.value ? "inherit" : "red",
+          }}
+        >
+          {params.value || "-"}
+        </span>
       ),
     },
     {
@@ -125,17 +157,59 @@ const Customers = () => {
       headerName: "Village",
       flex: 1,
       renderCell: (params) => (
-        <span style={{ textTransform: "capitalize" }}>{params.value}</span>
+        <span
+          style={{
+            textTransform: "capitalize",
+            color: params.value ? "inherit" : "red",
+          }}
+        >
+          {params.value || "-"}
+        </span>
       ),
     },
-    { field: "mobileNumber", headerName: "Mobile Number", flex: 1 },
-    { field: "alternateMobileNumber", headerName: "Alt Mobile N", flex: 1 },
+    {
+      field: "mobileNumber",
+      headerName: "Mobile Number",
+      flex: 1,
+      renderCell: (params) => (
+        <span
+          style={{
+            textTransform: "capitalize",
+            color: params.value ? "inherit" : "red",
+          }}
+        >
+          {params.value || "-"}
+        </span>
+      ),
+    },
+    {
+      field: "alternateMobileNumber",
+      headerName: "Alt Mobile N",
+      flex: 1,
+      renderCell: (params) => (
+        <span
+          style={{
+            textTransform: "capitalize",
+            color: params.value ? "inherit" : "red",
+          }}
+        >
+          {params.value || "-"}
+        </span>
+      ),
+    },
     {
       field: "accountBalance",
       headerName: "Account Balance",
       flex: 1,
       renderCell: (params) => (
-        <span style={{ textTransform: "capitalize" }}>{params.value}</span>
+        <span
+          style={{
+            textTransform: "capitalize",
+            color: params.value ? "inherit" : "red",
+          }}
+        >
+          {params.value || "-"}
+        </span>
       ),
     },
     {
@@ -146,19 +220,28 @@ const Customers = () => {
         <div className={styles.actions}>
           <button
             className={styles.detailsButton}
-            onClick={() => router.push(`/customer/${params.row.id}`)}
+            onClick={(e) => {
+              e.stopPropagation(); // Prevent row selection
+              router.push(`/customer/${params.row.id}`);
+            }}
           >
             <FaEye style={{ fontSize: "20px", color: "#555" }} />
           </button>
           <button
             className={styles.updateButton}
-            onClick={() => handleUpdate(params.row.id, params.row)}
+            onClick={(e) => {
+              e.stopPropagation(); // Prevent row selection
+              handleUpdate(params.row.id, params.row);
+            }}
           >
             <FaEdit style={{ fontSize: "20px", color: "#555" }} />
           </button>
           <button
             className={styles.deleteButton}
-            onClick={() => openConfirmDialog(params.row.id)}
+            onClick={(e) => {
+              e.stopPropagation(); // Prevent row selection
+              openConfirmDialog(params.row.id);
+            }}
           >
             <FaTrash style={{ fontSize: "20px", color: "#555" }} />
           </button>
@@ -190,7 +273,6 @@ const Customers = () => {
         <button
           onClick={() => router.push("/add-customer")}
           className={styles.addButton}
-          style={{ backgroundColor: "#5F67FA" }}
         >
           Add Customer
         </button>
@@ -203,20 +285,37 @@ const Customers = () => {
         className={styles.search}
       />
       <div className={styles.count}>
-        <span style={{ marginRight: "30px" }}>
-          Total Customers:{" "}
-          <span style={{ color: "#c1121f", fontWeight: "bold" }}>
-            {totalCustomers}
+        <div>
+          <span style={{ marginRight: "30px" }}>
+            Total Customers:{" "}
+            <span style={{ color: "#c1121f", fontWeight: "bold" }}>
+              {totalCustomers}
+            </span>
           </span>
-        </span>
-        <span>
-          Filtered Customers:{" "}
-          <span style={{ color: "#c1121f", fontWeight: "bold" }}>
-            {filteredCustomerCount}
+          <span>
+            Filtered Customers:{" "}
+            <span style={{ color: "#c1121f", fontWeight: "bold" }}>
+              {filteredCustomerCount}
+            </span>
           </span>
-        </span>
+        </div>
+        <div>
+          <div className={styles.bulkActionsContainer}>
+            {selectedRows.length > 0 && (
+              <div className={styles.bulkActions}>
+                <button
+                  onClick={() => handleBulkDelete()}
+                  className={styles.bulkActionButton}
+                >
+                  Delete Selected
+                </button>
+                {/* Add other bulk action buttons as needed */}
+              </div>
+            )}
+          </div>
+        </div>
       </div>
-      <div style={{ height: "calc(100vh - 250px)", width: "100%" }}>
+      <div style={{ height: "calc(100vh - 260px)", width: "100%" }}>
         <DataGrid
           rows={rows}
           columns={columns}
@@ -224,6 +323,7 @@ const Customers = () => {
             pagination: { paginationModel: { pageSize: 30, page: 0 } },
           }}
           pageSizeOptions={[30, 50, 100]}
+          onRowSelectionModelChange={handleSelectionModelChange}
           checkboxSelection
           sx={{ border: 0 }}
         />

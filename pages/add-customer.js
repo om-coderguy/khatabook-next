@@ -55,6 +55,7 @@ const AddCustomer = () => {
         <input
           type="text"
           name="name"
+          className={styles.capitalText}
           value={customer.name}
           onChange={handleChange}
           placeholder="Name"
@@ -64,6 +65,7 @@ const AddCustomer = () => {
           type="text"
           name="alternateName"
           value={customer.alternateName}
+          className={styles.capitalText}
           onChange={handleChange}
           placeholder="Alternate Name"
         />
@@ -71,6 +73,7 @@ const AddCustomer = () => {
           type="text"
           name="village"
           value={customer.village}
+          className={styles.capitalText}
           onChange={handleChange}
           placeholder="Village"
           required
@@ -98,7 +101,7 @@ const AddCustomer = () => {
           placeholder="Account Balance"
           required
         />
-        <button type="submit">{editMode ? 'Update Customer' : 'Add Customer'}</button>
+        <button type="submit" className={styles.saveButton}>{editMode ? 'Update' : 'Save'}</button>
       </form>
     </div>
   );
