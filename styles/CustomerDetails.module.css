@@ -13,6 +13,19 @@
   font-size: 18px;
 }
 
+.details{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.customerDetails{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
 .transactionsHeading {
   text-align: center;
   color: #f4a261;

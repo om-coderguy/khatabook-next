@@ -100,10 +100,10 @@ const CustomerDetails = () => {
   return (
     <div className={styles.container}>
       <div className={styles.details}>
-        <h2 style={{ textTransform: "uppercase", fontSize: "22px" }}>
-          {customer.id}. {customer.name}
+        <h2 style={{ textTransform: "uppercase", fontSize: "22px",color:"blue" }}>
+          {customer.id}.{ customer.name}
         </h2>
-        <div className="customer-details">
+        <div className={styles.customerDetails}>
           <table className={styles.customerTable}>
             <tbody>
               <tr>

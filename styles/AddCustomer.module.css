@@ -1,31 +1,82 @@
 .container {
-    padding: 20px;
-    width: 50%;
-  }
-  
-  .form {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-bottom: 20px;
-  }
-  
-  .form input {
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-  }
-  
-  .form button {
-    padding: 10px;
-    background-color: #0070f3;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  .form button:hover {
-    background-color: #005bb5;
-  }
-  
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 60px);
+  justify-content: center;
+  align-items: center;
+  background-color: #f9f9f9; /* Light background for contrast */
+  padding: 20px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  gap: 15px;
+  background-color: #fff;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add soft shadow for depth */
+  width: 100%;
+  max-width: 500px; /* Max width for better form proportion */
+}
+
+.form h1 {
+  text-align: center;
+  font-size: 24px;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.form input {
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 16px;
+  outline: none;
+  transition: border-color 0.3s ease;
+  width: 100%;
+}
+
+.form input:focus {
+  border-color: #0070f3; /* Highlight border color on focus */
+}
+
+.form input::placeholder {
+  color: #bbb; /* Lighter placeholder text */
+}
+
+.form button {
+  padding: 15px;
+  color: #f2e8cf;
+  letter-spacing: 2px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 15px;
+}
+
+
+
+.form button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.capitalText{
+  text-transform: capitalize;
+}
+
+.saveButton{
+  background-color: #6a994e;
+}
+
+.saveButton:hover {
+  background-color: #005bb5;
+}
+
+.saveButton:active {
+  background-color: #414198;
+}
