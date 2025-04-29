@@ -6,6 +6,7 @@ import styles from "../styles/Customers.module.css";
 import dummyData from "../public/dummyData.json"; // Import the dummy data
 import { DataGrid } from "@mui/x-data-grid";
 import { FaEye, FaEdit, FaTrash } from "react-icons/fa";
+import AddCustomer from "./add-customer";
 
 const Customers = () => {
   const [customers, setCustomers] = useState([]);
@@ -17,6 +18,9 @@ const Customers = () => {
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [customerToDelete, setCustomerToDelete] = useState(null);
   const router = useRouter();
+  const [openDialog, setOpenDialog] = useState(false);
+  const [editMode, setEditMode] = useState(false);
+  const [selectedCustomer, setSelectedCustomer] = useState(null);
 
   const fetchCustomers = async () => {
     const customersRef = ref(db, "customers/");
@@ -28,6 +32,17 @@ const Customers = () => {
       setTotalCustomers(customersData.length);
       setFilteredCustomerCount(customersData.length);
     }
+  };
+
+  const handleEditCustomer = (customerId = 0, customer = null) => {
+    setEditMode(true);
+    setSelectedCustomer(customer);
+    setSelectedCustomerId(customerId);
+    setOpenDialog(true);
+  };
+  const handleAddCustomer = (customerId = 0, customer = null) => {
+    setEditMode(false);
+    setOpenDialog(true);
   };
 
   useEffect(() => {
@@ -42,16 +57,16 @@ const Customers = () => {
     fetchCustomers();
   };
 
-  const handleUpdate = (customerId, customerData) => {
-    router.push({
-      pathname: "/add-customer",
-      query: {
-        customerId,
-        customerData: JSON.stringify(customerData),
-        editMode: true,
-      },
-    });
-  };
+  // const handleUpdate = (customerId, customerData) => {
+  //   router.push({
+  //     pathname: "/add-customer",
+  //     query: {
+  //       customerId,
+  //       customerData: JSON.stringify(customerData),
+  //       editMode: true,
+  //     },
+  //   });
+  // };
 
   const handleSearch = (e) => {
     const query = e.target.value.toLowerCase();
@@ -152,7 +167,7 @@ const Customers = () => {
           </button>
           <button
             className={styles.updateButton}
-            onClick={() => handleUpdate(params.row.id, params.row)}
+            onClick={() => handleEditCustomer(params.id, params.row)}
           >
             <FaEdit style={{ fontSize: "20px", color: "#555" }} />
           </button>
@@ -188,7 +203,7 @@ const Customers = () => {
           Customers
         </h2>
         <button
-          onClick={() => router.push("/add-customer")}
+          onClick={() => handleAddCustomer()}
           className={styles.addButton}
           style={{ backgroundColor: "#5F67FA" }}
         >
@@ -228,6 +243,13 @@ const Customers = () => {
           sx={{ border: 0 }}
         />
       </div>
+      <AddCustomer
+        open={openDialog}
+        onClose={() => setOpenDialog(false)}
+        customerData={selectedCustomer}
+        editMode={editMode}
+        fetchCustomers={fetchCustomers}
+      />
       {showConfirmDialog && (
         <div className={styles.dialogOverlay}>
           <div className={styles.dialogBox}>
