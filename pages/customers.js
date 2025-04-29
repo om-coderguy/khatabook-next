@@ -38,7 +38,7 @@ const Customers = () => {
   const handleEditCustomer = (customerId = 0, customer = null) => {
     setEditMode(true);
     setSelectedCustomer(customer);
-    setSelectedCustomerId(customerId);
+    // setSelectedCustomerId(customerId);
     setOpenDialog(true);
   };
   const handleAddCustomer = (customerId = 0, customer = null) => {
