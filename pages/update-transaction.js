@@ -2,31 +2,40 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { db } from "../firebase";
 import { ref, set, get } from "firebase/database";
-import { TextField, Autocomplete, Button } from "@mui/material"; // Import MUI components
-import styles from "../styles/UpdateTransaction.module.css"; // Import the new CSS file
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  TextField,
+  Autocomplete,
+  Button,
+} from "@mui/material";
+import styles from "../styles/UpdateTransaction.module.css";
 
-const AddTransaction = () => {
+const AddTransactionDialog = ({
+  open,
+  onClose,
+  userId,
+  transactionId,
+  fetchTransactions,
+}) => {
   const [amount, setAmount] = useState("");
   const [date, setDate] = useState("");
   const [billNumber, setBillNumber] = useState("");
   const [bookNumber, setBookNumber] = useState("");
   const [note, setNote] = useState("");
-  const [transactionTypes, setTransactionTypes] = useState(""); // Updated for multiselect
-  const [paymentModes, setPaymentModes] = useState([]); // Updated for multiselect
-  const [userId, setUserId] = useState("");
-  const [transactionId, setTransactionId] = useState("");
+  const [transactionTypes, setTransactionTypes] = useState("");
+  const [paymentModes, setPaymentModes] = useState([]);
   const router = useRouter();
 
-  const transactionTypeOptions = ["Debit", "Credit"]; // Options for transaction type
-  const paymentModeOptions = ["Cash", "Card", "UPI", "Net Banking"]; // Options for payment modes
+  const transactionTypeOptions = ["Debit", "Credit"];
+  const paymentModeOptions = ["Cash", "Card", "UPI", "Net Banking"];
 
   useEffect(() => {
-    const { userId, id } = router.query;
-    setUserId(userId);
-
-    if (id) {
+    if (transactionId) {
       const fetchTransaction = async () => {
-        const transactionRef = ref(db, `transactions/${id}`);
+        const transactionRef = ref(db, `transactions/${transactionId}`);
         const transactionSnapshot = await get(transactionRef);
         if (transactionSnapshot.exists()) {
           const data = transactionSnapshot.val();
@@ -35,30 +44,23 @@ const AddTransaction = () => {
           setBillNumber(data.bill_number);
           setBookNumber(data.book_number);
           setNote(data.note);
-          setTransactionTypes(data.transaction_type?.split(",") || []);
-          setPaymentModes(data.payment_mode?.split(",") || []);
-          setTransactionId(id);
+          setTransactionTypes(data.transaction_type || "");
+          setPaymentModes(
+            data.payment_mode ? data.payment_mode.split(",") : []
+          );
         }
       };
       fetchTransaction();
     } else {
-      const fetchTransactions = async () => {
-        const transactionsRef = ref(db, "transactions");
-        const transactionsSnapshot = await get(transactionsRef);
-        if (transactionsSnapshot.exists()) {
-          const transactions = transactionsSnapshot.val();
-          const ids = Object.keys(transactions).map((id) =>
-            parseInt(id.slice(1))
-          );
-          const maxId = Math.max(...ids);
-          setTransactionId(`T${maxId + 1}`);
-        } else {
-          setTransactionId("T1");
-        }
-      };
-      fetchTransactions();
+      setTransactionTypes("");
+      setPaymentModes([]);
+      setAmount("");
+      setDate("");
+      setBillNumber("");
+      setBookNumber("");
+      setNote("");
     }
-  }, [router.query]);
+  }, [transactionId]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -70,20 +72,21 @@ const AddTransaction = () => {
       bill_number: billNumber,
       book_number: bookNumber,
       note,
-      transaction_type: transactionTypes, // Save as comma-separated string
-      payment_mode: paymentModes, // Save as comma-separated string
+      transaction_type: transactionTypes,
+      payment_mode: paymentModes.join(","),
     };
     await set(ref(db, `transactions/${transactionId}`), newTransaction);
-    router.push(`/customer/${userId}`);
+    fetchTransactions(transactionId);
+    onClose();
   };
 
   return (
-    <div className={styles.container}>
-      <h1 className={styles.header}>
+    <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
+      <DialogTitle>
         {transactionId ? "Edit Transaction" : "Add Transaction"}
-      </h1>
-      <form onSubmit={handleSubmit} className={styles.form}>
-        <div className={styles.formGroup}>
+      </DialogTitle>
+      <DialogContent>
+        <form onSubmit={handleSubmit} className={styles.form}>
           <TextField
             label="Amount"
             type="number"
@@ -92,9 +95,8 @@ const AddTransaction = () => {
             fullWidth
             required
             className={styles.input}
+            margin="dense"
           />
-        </div>
-        <div className={styles.formGroup}>
           <TextField
             label="Date"
             type="date"
@@ -104,22 +106,24 @@ const AddTransaction = () => {
             required
             InputLabelProps={{ shrink: true }}
             className={styles.input}
+            margin="dense"
           />
-        </div>
-        <div className={styles.formGroup}>
           <Autocomplete
             options={transactionTypeOptions}
             value={transactionTypes}
             onChange={(event, newValue) => setTransactionTypes(newValue)}
             renderInput={(params) => (
-              <TextField {...params} label="Transaction Type" fullWidth />
+              <TextField
+                {...params}
+                label="Transaction Type"
+                fullWidth
+                margin="dense"
+              />
             )}
             className={styles.input}
           />
-        </div>
-        {transactionTypes=="Debit"&& (
-          <>
-            <div className={styles.formGroup}>
+          {transactionTypes === "Debit" && (
+            <>
               <TextField
                 label="Bill Number"
                 type="text"
@@ -127,9 +131,8 @@ const AddTransaction = () => {
                 onChange={(e) => setBillNumber(e.target.value)}
                 fullWidth
                 className={styles.input}
+                margin="dense"
               />
-            </div>
-            <div className={styles.formGroup}>
               <TextField
                 label="Book Number"
                 type="text"
@@ -137,24 +140,27 @@ const AddTransaction = () => {
                 onChange={(e) => setBookNumber(e.target.value)}
                 fullWidth
                 className={styles.input}
+                margin="dense"
               />
-            </div>
-          </>
-        )}
-        {transactionTypes=="Credit"&& (
-          <div className={styles.formGroup}>
+            </>
+          )}
+          {transactionTypes === "Credit" && (
             <Autocomplete
+              multiple
               options={paymentModeOptions}
               value={paymentModes}
               onChange={(event, newValue) => setPaymentModes(newValue)}
               renderInput={(params) => (
-                <TextField {...params} label="Payment Mode" fullWidth />
+                <TextField
+                  {...params}
+                  label="Payment Mode"
+                  fullWidth
+                  margin="dense"
+                />
               )}
               className={styles.input}
             />
-          </div>
-        )}
-        <div className={styles.formGroup}>
+          )}
           <TextField
             label="Note"
             type="text"
@@ -162,19 +168,20 @@ const AddTransaction = () => {
             onChange={(e) => setNote(e.target.value)}
             fullWidth
             className={styles.input}
+            margin="dense"
           />
-        </div>
-        <Button
-          type="submit"
-          variant="contained"
-          color="primary"
-          className={styles.submitButton}
-        >
+        </form>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={onClose} color="secondary">
+          Cancel
+        </Button>
+        <Button onClick={handleSubmit} color="primary" variant="contained">
           Save
         </Button>
-      </form>
-    </div>
+      </DialogActions>
+    </Dialog>
   );
 };
 
-export default AddTransaction;
+export default AddTransactionDialog;

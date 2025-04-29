@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import { ref, get, set, remove } from "firebase/database";
 import { db } from "../../firebase";
 import styles from "../../styles/CustomerDetails.module.css";
+import AddTransactionDialog from "../update-transaction";
 
 const CustomerDetails = () => {
   const [customer, setCustomer] = useState(null);
@@ -11,6 +12,8 @@ const CustomerDetails = () => {
   const router = useRouter();
   const { id } = router.query;
   const userId = id;
+  const [openDialog, setOpenDialog] = useState(false);
+  const [selectedTransactionId, setSelectedTransactionId] = useState(null);
 
   useEffect(() => {
     const fetchCustomerDetails = async () => {
@@ -19,28 +22,6 @@ const CustomerDetails = () => {
       if (snapshot.exists()) {
         setCustomer(snapshot.val());
       }
-
-      const fetchTransactions = async (id) => {
-        try {
-          const transactionsRef = ref(db, `transactions`);
-          const transactionsSnapshot = await get(transactionsRef);
-          let transactionData = Object.entries(transactionsSnapshot.val());
-
-          transactionData = transactionData.filter(
-            ([transactionId, transactionData]) => transactionData.user_id === id
-          );
-
-          if (transactionsSnapshot.exists()) {
-            // Use the snapshot value directly to retain the object structure
-            setTransactions(transactionData);
-          } else {
-            console.log("No data available");
-          }
-        } catch (error) {
-          console.error("Error fetching transactions:", error);
-        }
-      };
-
       // Example usage
       fetchTransactions(id).then((transactions) => {});
     };
@@ -49,6 +30,32 @@ const CustomerDetails = () => {
       fetchCustomerDetails();
     }
   }, [id]);
+
+  const handleOpenDialog = (transactionId = null, type) => {
+    setSelectedTransactionId(transactionId);
+    setOpenDialog(true);
+  };
+
+  const fetchTransactions = async (id) => {
+    try {
+      const transactionsRef = ref(db, `transactions`);
+      const transactionsSnapshot = await get(transactionsRef);
+      let transactionData = Object.entries(transactionsSnapshot.val());
+
+      transactionData = transactionData.filter(
+        ([transactionId, transactionData]) => transactionData.user_id === id
+      );
+
+      if (transactionsSnapshot.exists()) {
+        // Use the snapshot value directly to retain the object structure
+        setTransactions(transactionData);
+      } else {
+        console.log("No data available");
+      }
+    } catch (error) {
+      console.error("Error fetching transactions:", error);
+    }
+  };
 
   const calculateBalance = () => {
     const creditTotal = transactions
@@ -176,18 +183,18 @@ const CustomerDetails = () => {
       <h2 className={styles.transactionsHeading}>Transactions</h2>
       <div className={styles.transactionButtons}>
         <button
-          onClick={() => handleAddTransaction("Credit")}
+          onClick={() => handleOpenDialog(null, "Credit")}
           // className="bg-green-500 text-white p-2 rounded mr-2"
           className={styles.creditButton}
         >
-          Add Credit Transaction
+          Received
         </button>
         <button
-          onClick={() => handleAddTransaction("Debit")}
+          onClick={() => handleOpenDialog(null, "Debit")}
           // className="bg-red-500 text-white p-2 rounded"
           className={styles.debitButton}
         >
-          Add Debit Transaction
+          Given
         </button>
       </div>
       <div className="transactions-list mt-4">
@@ -246,7 +253,7 @@ const CustomerDetails = () => {
                     className={styles.updateButton}
                     onClick={(e) => {
                       e.stopPropagation();
-                      handleEditTransaction(
+                      handleOpenDialog(
                         transactionId,
                         transactionData.transaction_type
                       );
@@ -283,6 +290,13 @@ const CustomerDetails = () => {
             </div>
           ))}
       </div>
+      <AddTransactionDialog
+        open={openDialog}
+        onClose={() => setOpenDialog(false)}
+        userId={userId}
+        transactionId={selectedTransactionId}
+        fetchTransactions={fetchTransactions} // Replace with actual function
+      />
     </div>
   );
 };
