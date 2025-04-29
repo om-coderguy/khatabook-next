@@ -53,14 +53,12 @@
   width: 40%;
 }
 
-.count {
-  margin-bottom: 20px;
-}
 
 .addButton {
   padding: 15px;
   background-color: #6a994e;
   color: #f2e8cf;
+  letter-spacing: 2px;
   border: none;
   border-radius: 5px;
   cursor: pointer;
@@ -78,6 +76,14 @@
   display: flex;
   flex-wrap: wrap;
   gap: 20px;
+}
+
+.count{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  min-height: 36px;
 }
 
 .customerCard {
@@ -105,25 +111,6 @@
 
 .customerCard button:hover {
   background-color: #ddd;
-}
-
-.updateButton {
-  
-}
-
-.updateButton:hover {
-}
-
-.deleteButton {
- 
-}
-
-.detailsButton {
- 
-}
-
-.detailsButton:hover {
-
 }
 
 .customerTable {
@@ -212,8 +199,75 @@
 .actions {
   display: flex;
   gap: 10px;
+  align-items: center;
+  height: 100%;
 }
-.actions button{
-  padding: 5px;
+
+.actions button {
+  padding: 6px 10px;
   border-radius: 6px;
+  border: none;
+  height: 70%;
+  cursor: pointer;
+}
+
+.actions button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.actions .detailsButton {
+  background-color: #a4e8a4; /* Lighter Green */
+}
+
+.actions .detailsButton:hover {
+  background-color: #8fd38f; /* Slightly darker green */
+}
+
+.actions .updateButton {
+  background-color: #ffe39c; /* Lighter Yellow */
+}
+
+.actions .updateButton:hover {
+  background-color: #ffdc64; /* Darker yellow */
+}
+
+.actions .deleteButton {
+  background-color: #f8c4c4; /* Lighter Red */
+}
+
+.actions .deleteButton:hover {
+  background-color: #f1a9a9; /* Slightly darker red */
+}
+
+/* Bulk Actions Container */
+.bulkActionsContainer {
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* Bulk Actions Buttons */
+.bulkActions {
+  display: flex;
+  gap: 10px;
+}
+
+/* Styling for the bulk action buttons */
+.bulkActionButton {
+  padding: 10px 15px;
+  background-color: #ff4d4f;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.bulkActionButton:hover {
+  background-color: #ff1a1f;
+}
+
+.bulkActionButton:disabled {
+  background-color: #e0e0e0;
+  cursor: not-allowed;
 }

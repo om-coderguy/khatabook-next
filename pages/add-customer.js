@@ -66,6 +66,7 @@ const CustomerDialog = ({
   };
 
   return (
+    <>
     <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
       <DialogTitle>{editMode ? "Edit Customer" : "Add Customer"}</DialogTitle>
       <DialogContent>
@@ -134,6 +135,62 @@ const CustomerDialog = ({
         </Button>
       </DialogActions>
     </Dialog>
+    <div className={styles.container}>
+      <h1>{editMode ? 'Edit Customer' : 'Add Customer'}</h1>
+      <form onSubmit={handleSubmit} className={styles.form}>
+        <input
+          type="text"
+          name="name"
+          className={styles.capitalText}
+          value={customer.name}
+          onChange={handleChange}
+          placeholder="Name"
+          required
+        />
+        <input
+          type="text"
+          name="alternateName"
+          value={customer.alternateName}
+          className={styles.capitalText}
+          onChange={handleChange}
+          placeholder="Alternate Name"
+        />
+        <input
+          type="text"
+          name="village"
+          value={customer.village}
+          className={styles.capitalText}
+          onChange={handleChange}
+          placeholder="Village"
+          required
+        />
+        <input
+          type="text"
+          name="mobileNumber"
+          value={customer.mobileNumber}
+          onChange={handleChange}
+          placeholder="Mobile Number"
+          required
+        />
+        <input
+          type="text"
+          name="alternateMobileNumber"
+          value={customer.alternateMobileNumber}
+          onChange={handleChange}
+          placeholder="Alternate Mobile Number"
+        />
+        <input
+          type="number"
+          name="accountBalance"
+          value={customer.accountBalance}
+          onChange={handleChange}
+          placeholder="Account Balance"
+          required
+        />
+        <button type="submit" className={styles.saveButton}>{editMode ? 'Update' : 'Save'}</button>
+      </form>
+    </div>
+    </>
   );
 };
 

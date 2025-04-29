@@ -10,3 +10,7 @@ body {
     height: 100%;
     background-color: #D7D7E3;
   }
+
+  button {
+    letter-spacing: 1px; /* Adjust the value as needed */
+  }
