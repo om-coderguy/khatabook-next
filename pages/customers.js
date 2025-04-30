@@ -97,6 +97,10 @@ const Customers = () => {
     setCustomerToDelete(customerId);
     setShowConfirmDialog(true);
   };
+  const openBulkActionConfirmDialog = () => {
+    setCustomerToDelete(null);
+    setShowConfirmDialog(true);
+  };
 
   const closeConfirmDialog = () => {
     setShowConfirmDialog(false);
@@ -319,7 +323,7 @@ const Customers = () => {
             {selectedRows.length > 0 && (
               <div className={styles.bulkActions}>
                 <button
-                  onClick={() => handleBulkDelete()}
+                  onClick={() => openBulkActionConfirmDialog()}
                   className={styles.bulkActionButton}
                 >
                   Delete Selected
@@ -343,18 +347,23 @@ const Customers = () => {
           sx={{ border: 0 }}
         />
       </div>
+      {openDialog &&
       <AddCustomer
         open={openDialog}
         onClose={() => setOpenDialog(false)}
         customerData={selectedCustomer}
         editMode={editMode}
         fetchCustomers={fetchCustomers}
-      />
+      />}
       {showConfirmDialog && (
         <div className={styles.dialogOverlay}>
           <div className={styles.dialogBox}>
             <h2>Confirm Delete</h2>
-            <p>Are you sure you want to delete this customer?</p>
+            <p>
+              {customerToDelete
+                ? `Are you sure you want to delete this customer?`
+                : `Are you sure you want to delete ${selectedRows.length} customers?`}
+            </p>
             <div className={styles.dialogButtons}>
               <button
                 className={`${styles.dialogButton} ${styles.cancel}`}
@@ -364,7 +373,9 @@ const Customers = () => {
               </button>
               <button
                 className={`${styles.dialogButton} ${styles.confirm}`}
-                onClick={handleDeleteConfirmed}
+                onClick={
+                  customerToDelete ? handleDeleteConfirmed : handleBulkDelete
+                }
               >
                 Confirm
               </button>
